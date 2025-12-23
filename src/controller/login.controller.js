@@ -1,3 +1,4 @@
+import Session from "../model/session.model.js";
 import User from "../model/user.model.js";
 import { generateAccessAndRefreshTokens } from "../services/token.services.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
@@ -31,6 +32,14 @@ export const signIn = async (req, res) => {
 
     res.status(200).cookie("accessToken", accessToken, cookieOptions);
 
+    const session = await Session.create({
+      userId: loggedInUser._id,
+      accessToken: token,
+      ip: req.ip,
+      deviceName: req.deviceName,
+      os: req.os,
+      isActive: true,
+    });
     return SendResponse(res, 200, true, SUCCESS_MSG.USER_LOGGED_IN, {
       user: loggedInUser,
       accessToken,
