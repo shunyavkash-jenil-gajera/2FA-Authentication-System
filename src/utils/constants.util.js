@@ -3,5 +3,5 @@ export const ERROR_MESSAGE = {
 };
 
 export const SUCCESS_MESSAGE = {
-  USER_REGISTERD: "User registered successfully",
+  USER_REGISTERED: "User registered successfully",
 };

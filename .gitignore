@@ -2,3 +2,5 @@
 node_modules/
 **/temp/*.tmp
 .env
+oAuth/
+ref/

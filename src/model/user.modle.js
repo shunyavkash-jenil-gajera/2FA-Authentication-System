@@ -1,13 +1,8 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
-const accountSchema = new Schema(
+const userSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    lastName: {
+    userName: {
       type: String,
       required: true,
       trim: true,
@@ -25,11 +20,19 @@ const accountSchema = new Schema(
       minlength: 6,
       select: false,
     },
+    enabled_2fa: {
+      type: Boolean,
+      require: true,
+      default: true,
+    },
+    secrete2fa: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const Account = model("Account", accountSchema);
-export default Account;
+const User = model("User", userSchema);
+export default User;
