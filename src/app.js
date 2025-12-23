@@ -7,6 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.post("/api/data", (req, res) => {
+  console.log(req, "Request");
+  res.send("Data received");
+});
+
 app.get("/", (req, res) => {
   console.log(req.body, "body");
   return SendResponse(res, 200, true, "App is running");
