@@ -16,7 +16,6 @@ export const logIn = async (req, res) => {
     }
 
     const isPasswordValid = await user.comparePassword(password);
-    console.log(isPasswordValid);
 
     if (!isPasswordValid) {
       return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_PASSWORD);

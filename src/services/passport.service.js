@@ -29,7 +29,7 @@ export const setupPassport = (passport) => {
           let user = await User.findOne({ email });
 
           if (!user) {
-            const randomPassword = crypto.randomBytes(16).toString("hex");
+            const randomPassword = crypto.randomBytes(12).toString("hex");
             user = await User.create({
               userName,
               email,
@@ -38,7 +38,6 @@ export const setupPassport = (passport) => {
             });
           }
 
-          console.log(user, "login");
           return done(null, user);
         } catch (err) {
           return done(err, null);
