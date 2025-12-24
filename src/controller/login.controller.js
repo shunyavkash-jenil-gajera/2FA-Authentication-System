@@ -1,19 +1,28 @@
 import Session from "../model/session.model.js";
 import User from "../model/user.model.js";
-import { generateAccessAndRefreshTokens } from "../services/token.services.js";
+import { generateAccessAndRefreshTokens } from "../services/token.service.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
-export const signIn = async (req, res) => {
+export const logIn = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  let user = await User.findOne({ email }).select("+password +twoFactorSecret");
 
   if (!user) {
     return SendResponse(res, 400, false, ERROR_MSG.USER_NOT_FOUND);
   }
 
-  const isPasswordValid = user.password === password;
+  const isPasswordValid = await user.comparePassword(password);
+
+  // const isPasswordValid = user.password === password;
   if (!isPasswordValid) {
     return SendResponse(res, 400, false, ERROR_MSG.INVALID_PASSWORD);
+  }
+
+  if (user.enabled_2fa) {
+    return SendResponse(res, 200, true, "2FA required", {
+      require2FA: true,
+      accountId: account._id,
+    });
   }
   try {
     const { accessToken } = await generateAccessAndRefreshTokens({
