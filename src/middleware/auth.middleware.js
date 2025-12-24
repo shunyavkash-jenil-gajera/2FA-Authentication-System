@@ -1,25 +1,53 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import { ACCESS_TOKEN_SECRETE } from "../config/environment.config.js";
+import { SendResponse } from "../utils/sendResponse.util.js";
 
-function auth(req, res, next) {
-  const authHeader = req.headers.authorization || "";
-  const [scheme, token] = authHeader.split(" ");
-
-  if (scheme !== "Bearer" || !token) {
-    return res
-      .status(401)
-      .json({ message: "Missing or invalid Authorization header" });
-  }
-
+export const authMiddleware = async (req, res, _, next) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded.id, email: decoded.email };
-    next();
-  } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Access token expired" });
-    }
-    return res.status(401).json({ message: "Invalid token" });
-  }
-}
+    const token = req.header("Authorization")?.replace("Bearer ", "");
 
-module.exports = auth;
+    console.log("Token", token);
+
+    if (!token) {
+      console.error("No token provided in Authorization header");
+      return SendResponse(res, 400, false, "No token provided");
+    }
+
+    if (token.split(".").length < 0) {
+      return SendResponse(res, 400, false, "Malformed token");
+    }
+
+    const decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRETE);
+
+    if (!decodedToken?.id) {
+      console.error("Decoded token does not contain user ID:", decodedToken);
+      return SendResponse(
+        res,
+        400,
+        false,
+        "Unauthorized request: Invalid token payload"
+      );
+    }
+
+    if (!user) {
+      console.error("User not found for token:", decodedToken);
+      return SendResponse(
+        res,
+        401,
+        false,
+        "Unauthorized request: User not found"
+      );
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error("JWT verification failed:", error.message);
+    return SendResponse(
+      res,
+      401,
+      false,
+      error?.message || "Invalid access token"
+    );
+  }
+};

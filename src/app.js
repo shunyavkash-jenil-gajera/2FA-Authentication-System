@@ -3,6 +3,8 @@ import passport from "passport";
 import { SendResponse } from "./utils/sendResponse.util.js";
 import router from "./routes/routes.js";
 import "./services/passport.service.js";
+import { setupPassport } from "./services/passport.service.js";
+import { globalErrorHandler } from "./utils/global.error.handler.js";
 
 const app = express();
 
@@ -10,6 +12,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
+
+setupPassport(passport);
 
 app.post("/api/data", (req, res) => {
   console.log(req, "Request");
@@ -22,6 +26,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1", router);
+app.use(globalErrorHandler);
 console.log("WelCome 2FA Authentication System");
 
 export default app;
