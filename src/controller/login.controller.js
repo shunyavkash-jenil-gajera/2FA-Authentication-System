@@ -1,22 +1,33 @@
 import Session from "../model/session.model.js";
 import User from "../model/user.model.js";
-import { generateAccessAndRefreshTokens } from "../services/token.services.js";
+import { generateAccessToken } from "../services/token.service.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
-export const signIn = async (req, res) => {
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../utils/constants.util.js";
+
+export const logIn = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
-    return SendResponse(res, 400, false, ERROR_MSG.USER_NOT_FOUND);
+    return SendResponse(res, 400, false, ERROR_MESSAGE.USER_NOT_FOUND || "User not found");
   }
 
-  const isPasswordValid = user.password === password;
+  const isPasswordValid = await user.comparePassword(password);
+
   if (!isPasswordValid) {
-    return SendResponse(res, 400, false, ERROR_MSG.INVALID_PASSWORD);
+    return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_PASSWORD || "Invalid password");
   }
+
+  if (user.enabled_2fa) {
+    return SendResponse(res, 200, true, "2FA required", {
+      require2FA: true,
+      UserId: user._id,
+    });
+  }
+
   try {
-    const { accessToken } = await generateAccessAndRefreshTokens({
+    const { accessToken } = await generateAccessToken({
       id: user._id,
     });
 
@@ -32,20 +43,26 @@ export const signIn = async (req, res) => {
 
     res.status(200).cookie("accessToken", accessToken, cookieOptions);
 
-    const session = await Session.create({
+    await Session.create({
       userId: loggedInUser._id,
-      accessToken: token,
+      accessToken,
       ip: req.ip,
       deviceName: req.deviceName,
       os: req.os,
       isActive: true,
     });
-    return SendResponse(res, 200, true, SUCCESS_MSG.USER_LOGGED_IN, {
+
+    return SendResponse(res, 200, true, SUCCESS_MESSAGE.USER_LOGGED_IN || "User logged in", {
       user: loggedInUser,
       accessToken,
     });
   } catch (error) {
     console.error("Login Error:", error.message || error);
-    return SendResponse(res, 500, ERROR_MSG.INTERNAL_SERVER_ERROR);
+    return SendResponse(
+      res,
+      500,
+      false,
+      ERROR_MESSAGE.INTERNAL_SERVER_ERROR || "Internal server error"
+    );
   }
 };

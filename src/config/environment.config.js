@@ -1,2 +1,9 @@
-export const { PORT, MONGO_URL, ACCESS_TOKEN_EXPIRY, ACCESS_TOKEN_SECRETE } =
-  process.env;
+export const {
+  PORT,
+  MONGO_URL,
+  ACCESS_TOKEN_EXPIRY,
+  ACCESS_TOKEN_SECRETE,
+  CLIENT_ID,
+  CLIENT_SECRETE,
+  CALLBACK_URL,
+} = process.env;
