@@ -7,8 +7,6 @@ export const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
 
-    console.log("Token = ", token);
-
     if (!token) {
       console.error("No token provided in Authorization header");
       return SendResponse(res, 400, false, "No token provided");
@@ -30,7 +28,9 @@ export const authMiddleware = async (req, res, next) => {
       );
     }
 
-    const user = await User.findById(decodedToken?.id).select("-password");
+    const user = await User.findById(decodedToken?.id).select(
+      "-password -secrete2fa"
+    );
 
     if (!user) {
       console.error("User not found for token:", decodedToken);
@@ -42,8 +42,6 @@ export const authMiddleware = async (req, res, next) => {
       );
     }
 
-    console.log((req.user = { user, token }));
-    console.log(req.user, "=======");
     req.user = { user, accessToken: token };
     next();
   } catch (error) {

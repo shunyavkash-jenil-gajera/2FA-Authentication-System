@@ -5,13 +5,22 @@ import Session from "../model/session.model.js";
 
 export const verifyOtp = async (req, res) => {
   try {
-    const { otp } = req.body;
-    const { user, accessToken } = req.user;
+    const { otp, accessToken } = req.body;
+    const _id = req.user.user._id;
 
-    const users = await User.findById(user._id).select("+secrete2fa");
+    const user = await User.findById(_id).select("+secrete2fa");
+
+    if (!user || !user.secrete2fa) {
+      return SendResponse(
+        res,
+        400,
+        false,
+        "2FA secret not found. Please enable 2FA first."
+      );
+    }
 
     const isVerified = speakeasy.totp.verify({
-      secret: users.secrete2fa,
+      secret: user.secrete2fa,
       encoding: "base32",
       token: otp,
       window: 1,
@@ -20,18 +29,17 @@ export const verifyOtp = async (req, res) => {
     if (!isVerified) {
       return SendResponse(res, 400, false, "Invalid OTP");
     }
-    users.enabled_2fa = true;
-    await users.save();
-
-    const updatedSeller = await Session.findByIdAndUpdate(
-      accessToken,
-      { is2FaComplete },
+    user.enabled_2fa = true;
+    await user.save();
+    const updatedSession = await Session.findOneAndUpdate(
+      { accessToken: accessToken },
+      { is2FaComplete: true },
       { new: true }
     );
 
     return SendResponse(res, 200, true, "2FA enabled successfully", {
       isVerified: isVerified,
-      updatedSeller,
+      updatedSession,
     });
   } catch (error) {
     console.log(error);

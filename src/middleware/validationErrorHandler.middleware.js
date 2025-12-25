@@ -4,7 +4,6 @@ export const validationErrorHandler =
   (schema, property = "body") =>
   (req, res, next) => {
     const data = req[property];
-    
     console.log(req.body, "req.body");
 
     if (!data || (typeof data === "object" && Object.keys(data).length === 0)) {

@@ -18,7 +18,7 @@ export const setupPassport = (passport) => {
       },
       async function (request, accessToken, _, profile, done) {
         try {
-          console.log(done, "done");
+          console.log(profile, "done");
           const email = profile.email;
           const userName =
             profile.displayName ||
