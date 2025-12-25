@@ -24,17 +24,8 @@ export const generate2fa = async (req, res) => {
     }
 
     // Generate and display the QR code URL
-    const qrCodeDataURL = generateQRCodeURL()
-      .then((dataURL) => {
-        console.log("Scan the QR code with the Google Authenticator app:");
-        console.log(dataURL);
-        return dataURL;
-      })
-      .catch((err) => {
-        console.error("Error generating QR code:", err);
-      });
+    const qrCodeDataURL = await generateQRCodeURL();
 
-    console.log(qrCodeDataURL, "qrCodeDataURL");
     await User.findByIdAndUpdate(_id, {
       secrete2fa: secretKey.base32,
     });

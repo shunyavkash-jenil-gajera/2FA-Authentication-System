@@ -5,6 +5,8 @@ import router from "./routes/routes.js";
 import "./services/passport.service.js";
 import { setupPassport } from "./services/passport.service.js";
 import { globalErrorHandler } from "./utils/global.error.handler.js";
+import { FRONTEND_URL } from "./config/environment.config.js";
+import cors from "cors";
 
 const app = express();
 
@@ -14,6 +16,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 setupPassport(passport);
+
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+  })
+);
 
 app.post("/api/data", (req, res) => {
   console.log(req, "Request");

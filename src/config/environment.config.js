@@ -6,4 +6,5 @@ export const {
   CLIENT_ID,
   CLIENT_SECRETE,
   CALLBACK_URL,
+  FRONTEND_URL,
 } = process.env;

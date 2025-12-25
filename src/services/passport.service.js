@@ -16,7 +16,7 @@ export const setupPassport = (passport) => {
         callbackURL: CALLBACK_URL,
         passReqToCallback: true,
       },
-      async function (request, accessToken, profile, done) {
+      async function (request, accessToken, _, profile, done) {
         try {
           console.log(done, "done");
           const email = profile.email;

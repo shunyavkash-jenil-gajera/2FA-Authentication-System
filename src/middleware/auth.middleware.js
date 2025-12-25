@@ -1,12 +1,13 @@
 import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRETE } from "../config/environment.config.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
+import User from "../model/user.model.js";
 
-export const authMiddleware = async (req, res, _, next) => {
+export const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
 
-    console.log("Token", token);
+    console.log("Token = ", token);
 
     if (!token) {
       console.error("No token provided in Authorization header");
@@ -29,6 +30,8 @@ export const authMiddleware = async (req, res, _, next) => {
       );
     }
 
+    const user = await User.findById(decodedToken?.id).select("-password");
+
     if (!user) {
       console.error("User not found for token:", decodedToken);
       return SendResponse(
@@ -39,7 +42,9 @@ export const authMiddleware = async (req, res, _, next) => {
       );
     }
 
-    req.user = user;
+    console.log((req.user = { user, token }));
+    console.log(req.user, "=======");
+    req.user = { user, accessToken: token };
     next();
   } catch (error) {
     console.error("JWT verification failed:", error.message);

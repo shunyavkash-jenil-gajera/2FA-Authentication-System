@@ -2,8 +2,6 @@
 import express from "express";
 import passport from "passport";
 import { validationErrorHandler } from "../middleware/validationErrorHandler.middleware.js";
-import { authMiddleware } from "../middleware/auth.middleware.js";
-
 import { Register } from "../controller/register.controller.js";
 import { logIn } from "../controller/login.controller.js";
 import { generate2fa } from "../controller/generate2fa.controller.js";
@@ -15,6 +13,7 @@ import {
 
 import { registerSchema } from "../validation/registerSchema.validation.js";
 import { loginSchema } from "../validation/loginSchema.validation.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
