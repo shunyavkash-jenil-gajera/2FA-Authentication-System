@@ -20,12 +20,12 @@ export const logIn = async (req, res) => {
       return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_PASSWORD);
     }
 
-    if (!user.enabled_2fa) {
-      return SendResponse(res, 200, true, "2FA required", {
-        require2FA: true,
-        UserId: user._id,
-      });
-    }
+    // if (!user.enabled_2fa) {
+    //   return SendResponse(res, 200, true, "2FA required", {
+    //     require2FA: true,
+    //     UserId: user._id,
+    //   });
+    // }
 
     const { accessToken } = await generateAccessToken({
       id: user._id,

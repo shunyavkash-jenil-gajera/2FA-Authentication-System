@@ -5,7 +5,7 @@ import { SendResponse } from "../utils/sendResponse.util.js";
 
 export const generate2fa = async (req, res) => {
   try {
-    const _id = req.user.user._id;
+    const { _id } = req.user;
     const secretKey = speakeasy.generateSecret({ length: 20 });
 
     console.log(secretKey, "secretKey");
@@ -31,6 +31,7 @@ export const generate2fa = async (req, res) => {
 
     await User.findByIdAndUpdate(_id, {
       secrete2fa: secretKey.base32,
+      enabled_2fa: true,
     });
 
     return SendResponse(res, 200, true, "2FA secret generated", {

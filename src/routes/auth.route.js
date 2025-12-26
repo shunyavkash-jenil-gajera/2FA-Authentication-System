@@ -16,6 +16,7 @@ import {
 import { registerSchema } from "../validation/registerSchema.validation.js";
 import { loginSchema } from "../validation/loginSchema.validation.js";
 import { LogOut, LogOutAll } from "../controller/logout.controller.js";
+import { FRONTEND_URL } from "../config/environment.config.js";
 
 const router = express.Router();
 
@@ -43,6 +44,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
+    successRedirect: `${FRONTEND_URL}/setup-2fa`,
     failureRedirect: "/api/v1/auth/google/failure",
   }),
   googleAuthCallback

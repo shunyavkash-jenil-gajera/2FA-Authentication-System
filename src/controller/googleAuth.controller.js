@@ -10,6 +10,7 @@ export const googleAuthCallback = async (req, res) => {
     const { accessToken } = await generateAccessToken({
       id: user._id,
     });
+    
 
     res.header("accessToken", accessToken);
 
@@ -38,6 +39,9 @@ export const googleAuthCallback = async (req, res) => {
   }
 };
 
+export const googleAuthSuccess = (req, res) => {
+  return SendResponse(res, 400, false, "Google authentication failed");
+};
 export const googleAuthFailure = (req, res) => {
   return SendResponse(res, 400, false, "Google authentication failed");
 };

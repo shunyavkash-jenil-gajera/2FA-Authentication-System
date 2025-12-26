@@ -15,14 +15,9 @@ export const LogOut = async (req, res) => {
 
 export const LogOutAll = async (req, res) => {
   try {
-    // req.user already contains user data
-    const userId = req.user.user._id;
+    const { _id } = req.user;
 
-    if (!userId) {
-      return SendResponse(res, 400, false, "User not found");
-    }
-
-    const result = await Session.deleteMany({ userId });
+    const result = await Session.deleteMany({ userId: _id });
 
     const count = result.deletedCount;
 

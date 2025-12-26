@@ -42,7 +42,7 @@ export const authMiddleware = async (req, res, next) => {
       );
     }
 
-    req.user = { user, accessToken: token };
+    req.user = { ...user?._doc, accessToken: token };
     next();
   } catch (error) {
     console.error("JWT verification failed:", error.message);

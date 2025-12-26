@@ -24,7 +24,7 @@ const userSchema = new Schema(
     enabled_2fa: {
       type: Boolean,
       require: true,
-      default: true,
+      default: false,
     },
     secrete2fa: {
       type: String,

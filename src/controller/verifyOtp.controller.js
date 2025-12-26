@@ -6,7 +6,7 @@ import Session from "../model/session.model.js";
 export const verifyOtp = async (req, res) => {
   try {
     const { otp, accessToken } = req.body;
-    const _id = req.user.user._id;
+    const { _id } = req.user;
 
     const user = await User.findById(_id).select("+secrete2fa");
 
