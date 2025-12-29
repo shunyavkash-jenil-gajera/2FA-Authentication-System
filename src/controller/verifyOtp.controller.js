@@ -8,6 +8,8 @@ export const verifyOtp = async (req, res) => {
     const { otp, accessToken } = req.body;
     const { _id } = req.user;
 
+    console.log(otp, accessToken, _id, "data");
+
     const user = await User.findById(_id).select("+secrete2fa");
 
     if (!user || !user.secrete2fa) {

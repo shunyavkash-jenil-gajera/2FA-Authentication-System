@@ -5,29 +5,15 @@ import { SendResponse } from "../utils/sendResponse.util.js";
 
 export const generate2fa = async (req, res) => {
   try {
-    const { _id } = req.user;
-    const secretKey = speakeasy.generateSecret({ length: 20 });
+    const { _id, email } = req.user;
+    const secretKey = speakeasy.generateSecret({ length: 25 });
 
-    console.log(secretKey, "secretKey");
+    const otpUrl = `otpauth://totp/${encodeURIComponent(email)}?secret=${
+      secretKey.base32
+    }`;
 
     // Generate QR code URL
-    function generateQRCodeURL() {
-      return new Promise((resolve, reject) => {
-        QRCode.toDataURL(secretKey.otpauth_url, (err, dataURL) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(dataURL);
-          }
-        });
-      });
-    }
-
-    // Generate and await the QR code URL
-    const qrCodeDataURL = await generateQRCodeURL();
-
-    console.log("Scan the QR code with the Google Authenticator app:");
-    console.log(qrCodeDataURL, "qrCodeDataURL");
+    const qrCodeDataURL = await QRCode.toDataURL(otpUrl);
 
     await User.findByIdAndUpdate(_id, {
       secrete2fa: secretKey.base32,

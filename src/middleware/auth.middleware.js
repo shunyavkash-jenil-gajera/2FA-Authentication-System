@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRETE } from "../config/environment.config.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
 import User from "../model/user.model.js";
+import Session from "../model/session.model.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -10,6 +11,12 @@ export const authMiddleware = async (req, res, next) => {
     if (!token) {
       console.error("No token provided in Authorization header");
       return SendResponse(res, 400, false, "No token provided");
+    }
+
+    const session = await Session.find({ accessToken: token }).lean();
+
+    if (!session || session.length === 0) {
+      return SendResponse(res, 400, false, "Session Not Found Please login");
     }
 
     if (token.split(".").length < 0) {

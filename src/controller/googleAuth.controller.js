@@ -2,6 +2,7 @@ import { SendResponse } from "../utils/sendResponse.util.js";
 import { SUCCESS_MESSAGE } from "../utils/constants.util.js";
 import { generateAccessToken } from "../services/token.service.js";
 import Session from "../model/session.model.js";
+import { FRONTEND_URL } from "../config/environment.config.js";
 
 export const googleAuthCallback = async (req, res) => {
   try {
@@ -10,9 +11,6 @@ export const googleAuthCallback = async (req, res) => {
     const { accessToken } = await generateAccessToken({
       id: user._id,
     });
-    
-
-    res.header("accessToken", accessToken);
 
     await Session.create({
       userId: user._id,
@@ -22,20 +20,13 @@ export const googleAuthCallback = async (req, res) => {
       os: req.os,
       isActive: true,
     });
+    console.log(user, "user");
 
-    return SendResponse(
-      res,
-      200,
-      true,
-      SUCCESS_MESSAGE.USER_LOGGED_IN || "User logged in with Google",
-      {
-        user,
-        accessToken,
-      }
-    );
+    const frontendCallbackUrl = `${FRONTEND_URL}/auth-callback?token=${accessToken}&user=${user}`;
+    return res.redirect(frontendCallbackUrl);
   } catch (error) {
     console.error("Google OAuth Callback Error:", error.message || error);
-    return SendResponse(res, 500, false, "Google authentication failed");
+    return res.redirect(`${FRONTEND_URL}/login`);
   }
 };
 

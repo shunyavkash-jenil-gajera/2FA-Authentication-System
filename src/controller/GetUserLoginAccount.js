@@ -10,7 +10,7 @@ export const GetUserLoginAccount = async (req, res) => {
     }).lean();
 
     if (!sessions || sessions.length === 0) {
-      return SendResponse(res, 400, false, "Login Accounts Not Found");
+      return SendResponse(res, 200, false, "Login Accounts", []);
     }
 
     return SendResponse(res, 200, true, "User Login Accounts", sessions);

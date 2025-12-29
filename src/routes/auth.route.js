@@ -44,8 +44,6 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
-    successRedirect: `${FRONTEND_URL}/setup-2fa`,
-    failureRedirect: "/api/v1/auth/google/failure",
   }),
   googleAuthCallback
 );
