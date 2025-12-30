@@ -2,6 +2,7 @@ import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import User from "../model/user.model.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
+import { SUCCESS_MESSAGE } from "../utils/constants.util.js";
 
 export const generate2fa = async (req, res) => {
   try {
@@ -20,7 +21,7 @@ export const generate2fa = async (req, res) => {
       enabled_2fa: true,
     });
 
-    return SendResponse(res, 200, true, "2FA secret generated", {
+    return SendResponse(res, 200, true, SUCCESS_MESSAGE.SECRET_GENERATED, {
       qrCodeDataURL,
       secret: secretKey.base32,
     });

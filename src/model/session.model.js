@@ -8,7 +8,7 @@ const sessionSchema = new Schema({
   },
   accessToken: {
     type: String,
-    require:true
+    require: true,
   },
   ip: {
     type: String,

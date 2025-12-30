@@ -20,13 +20,6 @@ export const logIn = async (req, res) => {
       return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_PASSWORD);
     }
 
-    // if (!user.enabled_2fa) {
-    //   return SendResponse(res, 200, true, "2FA required", {
-    //     require2FA: true,
-    //     UserId: user._id,
-    //   });
-    // }
-
     const { accessToken } = await generateAccessToken({
       id: user._id,
     });
@@ -35,19 +28,11 @@ export const logIn = async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password");
 
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-    };
-
-    res.status(200).cookie("accessToken", accessToken, cookieOptions);
-
     await Session.create({
       userId: loggedInUser._id,
       accessToken,
       ip: req.ip,
-      deviceName: req.deviceName,
+      deviceName: req.device.type,
       os: req.os,
       isActive: true,
     });

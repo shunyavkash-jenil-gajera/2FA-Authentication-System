@@ -1,4 +1,5 @@
 import Session from "../model/session.model.js";
+import { SUCCESS_MESSAGE } from "../utils/constants.util.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
 
 export const GetUserLoginAccount = async (req, res) => {
@@ -9,11 +10,13 @@ export const GetUserLoginAccount = async (req, res) => {
       is2FaComplete: true,
     }).lean();
 
-    if (!sessions || sessions.length === 0) {
-      return SendResponse(res, 200, false, "Login Accounts", []);
-    }
-
-    return SendResponse(res, 200, true, "User Login Accounts", sessions);
+    return SendResponse(
+      res,
+      200,
+      true,
+      SUCCESS_MESSAGE.USER_LOGIN_ACCOUNTS,
+      sessions
+    );
   } catch (error) {
     return SendResponse(res, 500, false, error.message);
   }

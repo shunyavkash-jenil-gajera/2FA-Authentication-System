@@ -4,9 +4,22 @@ export const ERROR_MESSAGE = {
   INTERNAL_SERVER_ERROR: "Internal Server Error",
   USER_NOT_FOUND: "User Not Found",
   INVALID_PASSWORD: "Invalid Password",
+  GOOGLE_AUTHENTICATION_FAILED: "Google authentication failed",
+  SECRET_NOT_FOUND: "2FA secret not found. Please enable 2FA first.",
+  INVALID_OTP: "Invalid OTP",
+  TOKEN_NOT_FOUND: "No token provided",
+  SESSION_NOT_FOUND: "Session Not Found Please login",
+  MAIL_FORMED_TOKEN: "Malformed token",
+  INVALID_TOKEN: "Unauthorized request: Invalid token payload",
 };
 
 export const SUCCESS_MESSAGE = {
   USER_REGISTERED: "User registered successfully",
   USER_LOGGED_IN: "User Login Successfully",
+  SECRET_GENERATED: "2FA secret generated",
+  USER_LOGIN_ACCOUNTS: "User Login Accounts",
+  WELCOME_HOME: "welcome home page",
+  USER_LOGGED_OUT: "User Logged out Successfully",
+  ALL_USER_LOGGED_OUT: "User Logged out from all devices successfully",
+  ENABLED_2FA: "2FA enabled successfully",
 };

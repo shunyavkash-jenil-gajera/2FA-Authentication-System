@@ -1,7 +1,8 @@
 import express from "express";
 import { home } from "../controller/home.controller.js";
-import { GetUserLoginAccount } from "../controller/GetUserLoginAccount.js";
+
 import { authMiddleware } from "../middleware/auth.middleware.js";
+import { GetUserLoginAccount } from "../controller/GetUserLoginAccount.controller.js";
 
 const router = express.Router();
 

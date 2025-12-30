@@ -7,12 +7,13 @@ import { setupPassport } from "./services/passport.service.js";
 import { globalErrorHandler } from "./utils/global.error.handler.js";
 import { FRONTEND_URL } from "./config/environment.config.js";
 import cors from "cors";
+import device from "express-device";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(device.capture());
 app.use(passport.initialize());
 
 setupPassport(passport);

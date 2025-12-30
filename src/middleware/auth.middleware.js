@@ -3,6 +3,7 @@ import { ACCESS_TOKEN_SECRETE } from "../config/environment.config.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
 import User from "../model/user.model.js";
 import Session from "../model/session.model.js";
+import { ERROR_MESSAGE } from "../utils/constants.util.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -10,29 +11,24 @@ export const authMiddleware = async (req, res, next) => {
 
     if (!token) {
       console.error("No token provided in Authorization header");
-      return SendResponse(res, 400, false, "No token provided");
+      return SendResponse(res, 400, false, ERROR_MESSAGE.TOKEN_NOT_FOUND);
     }
 
     const session = await Session.find({ accessToken: token }).lean();
 
     if (!session || session.length === 0) {
-      return SendResponse(res, 400, false, "Session Not Found Please login");
+      return SendResponse(res, 400, false, ERROR_MESSAGE.SESSION_NOT_FOUND);
     }
 
     if (token.split(".").length < 0) {
-      return SendResponse(res, 400, false, "Malformed token");
+      return SendResponse(res, 400, false, ERROR_MESSAGE.MAIL_FORMED_TOKEN);
     }
 
     const decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRETE);
 
     if (!decodedToken?.id) {
       console.error("Decoded token does not contain user ID:", decodedToken);
-      return SendResponse(
-        res,
-        400,
-        false,
-        "Unauthorized request: Invalid token payload"
-      );
+      return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_TOKEN);
     }
 
     const user = await User.findById(decodedToken?.id).select(

@@ -1,5 +1,5 @@
 import { SendResponse } from "../utils/sendResponse.util.js";
-import { SUCCESS_MESSAGE } from "../utils/constants.util.js";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../utils/constants.util.js";
 import { generateAccessToken } from "../services/token.service.js";
 import Session from "../model/session.model.js";
 import { FRONTEND_URL } from "../config/environment.config.js";
@@ -16,7 +16,7 @@ export const googleAuthCallback = async (req, res) => {
       userId: user._id,
       accessToken,
       ip: req.ip,
-      deviceName: req.deviceName,
+      deviceName: req.device.type,
       os: req.os,
       isActive: true,
     });
@@ -30,9 +30,11 @@ export const googleAuthCallback = async (req, res) => {
   }
 };
 
-export const googleAuthSuccess = (req, res) => {
-  return SendResponse(res, 400, false, "Google authentication failed");
-};
 export const googleAuthFailure = (req, res) => {
-  return SendResponse(res, 400, false, "Google authentication failed");
+  return SendResponse(
+    res,
+    400,
+    false,
+    ERROR_MESSAGE.GOOGLE_AUTHENTICATION_FAILED
+  );
 };

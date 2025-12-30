@@ -2,6 +2,7 @@ import User from "../model/user.model.js";
 import speakeasy from "speakeasy";
 import { SendResponse } from "../utils/sendResponse.util.js";
 import Session from "../model/session.model.js";
+import { ERROR_MESSAGE } from "../utils/constants.util.js";
 
 export const verifyOtp = async (req, res) => {
   try {
@@ -13,12 +14,7 @@ export const verifyOtp = async (req, res) => {
     const user = await User.findById(_id).select("+secrete2fa");
 
     if (!user || !user.secrete2fa) {
-      return SendResponse(
-        res,
-        400,
-        false,
-        "2FA secret not found. Please enable 2FA first."
-      );
+      return SendResponse(res, 400, false, ERROR_MESSAGE.SECRET_NOT_FOUND);
     }
 
     const isVerified = speakeasy.totp.verify({
@@ -29,7 +25,7 @@ export const verifyOtp = async (req, res) => {
     });
 
     if (!isVerified) {
-      return SendResponse(res, 400, false, "Invalid OTP");
+      return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_OTP);
     }
     user.enabled_2fa = true;
     await user.save();

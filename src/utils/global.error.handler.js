@@ -1,7 +1,6 @@
 import { SendResponse } from "./sendResponse.util.js";
 
 export const globalErrorHandler = (err, req, res, next) => {
-  // Check if response has already been sent
   if (res.headersSent) {
     return next(err);
   }

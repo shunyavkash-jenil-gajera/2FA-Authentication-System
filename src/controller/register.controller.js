@@ -41,7 +41,7 @@ export const Register = async (req, res) => {
       userId: createdUser._id,
       accessToken: token,
       ip: req.ip,
-      deviceName: req.deviceName,
+      deviceName: req.device.type,
       os: req.os,
       isActive: true,
     });

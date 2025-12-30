@@ -1,4 +1,3 @@
-// import { Router } from "express";
 import express from "express";
 import passport from "passport";
 import { validationErrorHandler } from "../middleware/validationErrorHandler.middleware.js";
@@ -16,7 +15,6 @@ import {
 import { registerSchema } from "../validation/registerSchema.validation.js";
 import { loginSchema } from "../validation/loginSchema.validation.js";
 import { LogOut, LogOutAll } from "../controller/logout.controller.js";
-import { FRONTEND_URL } from "../config/environment.config.js";
 
 const router = express.Router();
 
