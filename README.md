@@ -8,6 +8,6 @@ $ npm install
 
 ```bash
 # development
-$ npm run start
+$ npm run dev
 
 ```
