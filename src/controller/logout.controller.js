@@ -6,7 +6,7 @@ export const LogOut = async (req, res) => {
   try {
     const { accessToken } = req.user;
     if (accessToken) {
-      await Session.findOneAndDelete(accessToken);
+      await Session.findOneAndDelete({ accessToken });
     }
     SendResponse(res, 200, true, SUCCESS_MESSAGE.USER_LOGGED_OUT);
   } catch (error) {
@@ -22,13 +22,7 @@ export const LogOutAll = async (req, res) => {
 
     const count = result.deletedCount;
 
-    return SendResponse(
-      res,
-      200,
-      true,
-      SUCCESS_MESSAGE.ALL_USER_LOGGED_OUT,
-      count
-    );
+    return SendResponse(res, 200, true, SUCCESS_MESSAGE.ALL_USER_LOGGED_OUT, count);
   } catch (error) {
     return SendResponse(res, 500, false, error.message);
   }

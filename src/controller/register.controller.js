@@ -1,16 +1,13 @@
 import jwt from "jsonwebtoken";
 import { SendResponse } from "../utils/sendResponse.util.js";
-import {
-  ACCESS_TOKEN_EXPIRY,
-  ACCESS_TOKEN_SECRETE,
-} from "../config/environment.config.js";
+import { ACCESS_TOKEN_EXPIRY, ACCESS_TOKEN_SECRETE } from "../config/environment.config.js";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../utils/constants.util.js";
 import User from "../model/user.model.js";
 import Session from "../model/session.model.js";
 
 export const Register = async (req, res) => {
   try {
-    const { userName, email, password } = req.body;
+    const { userName, email, password, deviceFingerprint } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -23,13 +20,9 @@ export const Register = async (req, res) => {
       email,
       password,
     });
-    const token = jwt.sign(
-      { id: newUser._id, email: newUser.email },
-      ACCESS_TOKEN_SECRETE,
-      {
-        expiresIn: ACCESS_TOKEN_EXPIRY,
-      }
-    );
+    const token = jwt.sign({ id: newUser._id, email: newUser.email }, ACCESS_TOKEN_SECRETE, {
+      expiresIn: ACCESS_TOKEN_EXPIRY,
+    });
 
     const createdUser = await User.findById(newUser._id).select("-password ");
 
@@ -37,13 +30,18 @@ export const Register = async (req, res) => {
       return SendResponse(res, 400, false, ERROR_MESSAGE.USER_REGISTER_ERROR);
     }
 
+    // Calculate expiry time (15 days for 2FA)
+    const twoFaExpiry = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+
     const session = await Session.create({
       userId: createdUser._id,
       accessToken: token,
       ip: req.ip,
       deviceName: req.device.type,
       os: req.os,
+      deviceFingerprint: deviceFingerprint || null,
       isActive: true,
+      twoFaExpiry,
     });
 
     return SendResponse(res, 200, true, SUCCESS_MESSAGE.USER_REGISTERED, {

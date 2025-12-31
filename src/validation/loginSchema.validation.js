@@ -9,4 +9,5 @@ export const loginSchema = Joi.object({
     "string.password": "Please enter a valid password.",
     "string.empty": "Password is required.",
   }),
-});
+  deviceFingerprint: Joi.string().optional(),
+}).unknown(true);

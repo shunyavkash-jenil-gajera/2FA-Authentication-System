@@ -9,9 +9,7 @@ export const generate2fa = async (req, res) => {
     const { _id, email } = req.user;
     const secretKey = speakeasy.generateSecret({ length: 25 });
 
-    const otpUrl = `otpauth://totp/${encodeURIComponent(email)}?secret=${
-      secretKey.base32
-    }`;
+    const otpUrl = `otpauth://totp/${encodeURIComponent(email)}?secret=${secretKey.base32}`;
 
     // Generate QR code URL
     const qrCodeDataURL = await QRCode.toDataURL(otpUrl);

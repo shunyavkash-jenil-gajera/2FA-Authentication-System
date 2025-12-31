@@ -2,15 +2,18 @@ import express from "express";
 import passport from "passport";
 import { validationErrorHandler } from "../middleware/validationErrorHandler.middleware.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
+import {
+  deviceFingerprintMiddleware,
+  checkTrustedDevice,
+} from "../middleware/deviceFingerprint.middleware.js";
+import { checkSessionExpiry } from "../middleware/sessionExpiry.middleware.js";
 
 import { Register } from "../controller/register.controller.js";
 import { logIn } from "../controller/login.controller.js";
 import { generate2fa } from "../controller/generate2fa.controller.js";
 import { verifyOtp } from "../controller/verifyOtp.controller.js";
-import {
-  googleAuthCallback,
-  googleAuthFailure,
-} from "../controller/googleAuth.controller.js";
+import { googleAuthCallback, googleAuthFailure } from "../controller/googleAuth.controller.js";
+import { logoutFromDevice } from "../controller/logoutFromDevice.controller.js";
 
 import { registerSchema } from "../validation/registerSchema.validation.js";
 import { loginSchema } from "../validation/loginSchema.validation.js";
@@ -18,17 +21,30 @@ import { LogOut, LogOutAll } from "../controller/logout.controller.js";
 
 const router = express.Router();
 
-router.post("/register", validationErrorHandler(registerSchema), Register);
+router.post(
+  "/register",
+  validationErrorHandler(registerSchema),
+  deviceFingerprintMiddleware,
+  Register
+);
 
-router.post("/login", validationErrorHandler(loginSchema), logIn);
+router.post(
+  "/login",
+  validationErrorHandler(loginSchema),
+  deviceFingerprintMiddleware,
+  checkTrustedDevice,
+  logIn
+);
 
-router.post("/enable-2fa", authMiddleware, generate2fa);
+router.post("/enable-2fa", checkSessionExpiry, authMiddleware, generate2fa);
 
-router.post("/verifyOtp", authMiddleware, verifyOtp);
+router.post("/verifyOtp", checkSessionExpiry, authMiddleware, verifyOtp);
 
-router.post("/logout", authMiddleware, LogOut);
+router.post("/logout", checkSessionExpiry, authMiddleware, LogOut);
 
-router.post("/logout-all", authMiddleware, LogOutAll);
+router.post("/logout-all", checkSessionExpiry, authMiddleware, LogOutAll);
+
+router.post("/logout-device", checkSessionExpiry, authMiddleware, logoutFromDevice);
 
 router.get(
   "/google",

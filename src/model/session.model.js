@@ -22,9 +22,10 @@ const sessionSchema = new Schema({
     type: String,
     default: null,
   },
-  //   lastActive: {
-  //     type: String,
-  //   },
+  deviceFingerprint: {
+    type: String,
+    default: null,
+  },
   isActive: {
     type: Boolean,
     require: true,
@@ -34,6 +35,19 @@ const sessionSchema = new Schema({
     type: Boolean,
     require: true,
     default: false,
+  },
+  isTrustedDevice: {
+    type: Boolean,
+    require: true,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  twoFaExpiry: {
+    type: Date,
+    default: () => new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days
   },
 });
 

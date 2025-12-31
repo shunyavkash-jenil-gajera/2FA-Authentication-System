@@ -18,4 +18,5 @@ export const registerSchema = Joi.object({
     "string.pattern.base":
       "Password must be between 8 and 20 characters and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*#?&)",
   }),
-});
+  deviceFingerprint: Joi.string().optional(),
+}).unknown(true);
