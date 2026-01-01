@@ -2,7 +2,6 @@
 
 A robust Node.js/Express backend for a Two-Factor Authentication (2FA) system with device fingerprinting, session management, and secure login capabilities.
 
-
 ## 🚀 Installation
 
 ### 1. Clone the Repository
@@ -63,7 +62,6 @@ npm run dev
 ```
 
 Server will start on `http://localhost:4001`
-
 
 ## 📁 Project Structure
 
@@ -349,8 +347,6 @@ If MongoDB connection fails:
 - Install fingerprint.js on frontend
 - Ensure fingerprint is passed on login/register
 - Check device fingerprint is consistent
-
-
 
 ---
 
