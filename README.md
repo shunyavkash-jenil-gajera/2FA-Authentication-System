@@ -2,57 +2,6 @@
 
 A robust Node.js/Express backend for a Two-Factor Authentication (2FA) system with device fingerprinting, session management, and secure login capabilities.
 
-## 🎯 Features
-
-✅ **Two-Factor Authentication (2FA)**
-
-- OTP generation and verification using Speakeasy
-- QR code generation for authenticator apps
-- 15-day 2FA validity window
-
-✅ **Device Management**
-
-- Device fingerprinting for trust detection
-- View all logged-in devices
-- Logout from individual devices or all devices
-- Device information tracking (OS, IP, name)
-
-✅ **Session Management**
-
-- Secure JWT token-based authentication
-- Session tracking per device
-- Automatic session expiry
-- Session-level 2FA tracking
-
-✅ **Security Features**
-
-- Password hashing with bcrypt
-- JWT token authentication
-- Device fingerprint validation
-- CORS protection
-- Input validation with Joi
-- Environment variable management
-
-✅ **OAuth Integration**
-
-- Google OAuth 2.0 authentication
-- Automatic user creation on first login
-- Seamless social login
-
-✅ **API Features**
-
-- RESTful API design
-- Comprehensive error handling
-- Request logging
-- Middleware-based authentication
-- Standardized response format
-
-## 📋 Prerequisites
-
-- **Node.js**: v14 or higher
-- **MongoDB**: Local or cloud (MongoDB Atlas)
-- **npm**: v6 or higher
-- **Git**: For version control
 
 ## 🚀 Installation
 
@@ -115,20 +64,6 @@ npm run dev
 
 Server will start on `http://localhost:4001`
 
-### Production Mode
-
-```bash
-npm start
-```
-
-### Using PM2 (Recommended for Production)
-
-```bash
-npm install -g pm2
-pm2 start src/index.js --name "2fa-auth"
-pm2 save
-pm2 startup
-```
 
 ## 📁 Project Structure
 
@@ -415,40 +350,10 @@ If MongoDB connection fails:
 - Ensure fingerprint is passed on login/register
 - Check device fingerprint is consistent
 
-## 📚 Additional Resources
 
-- [Express Documentation](https://expressjs.com/)
-- [MongoDB Documentation](https://docs.mongodb.com/)
-- [JWT Documentation](https://jwt.io/)
-- [Speakeasy Documentation](https://github.com/speakeasy-js/speakeasy)
-- [Passport.js Documentation](http://www.passportjs.org/)
-
-## 🤝 Contributing
-
-1. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-2. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-3. Push to the branch (`git push origin feature/AmazingFeature`)
-4. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👤 Author
-
-**Jenil Gajera**
-
-## 📞 Support
-
-For issues or questions:
-
-1. Check the documentation in the project
-2. Review error logs in console
-3. Check .env configuration
-4. Verify database connection
 
 ---
 
-**Last Updated**: December 31, 2025
+**Last Updated**: January 1, 2026
 **Version**: 1.0.0
 **Status**: Production Ready ✅
