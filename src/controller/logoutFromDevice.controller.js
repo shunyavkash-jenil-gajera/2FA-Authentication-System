@@ -8,15 +8,13 @@ export const logoutFromDevice = async (req, res) => {
     const { sessionId } = req.body;
     const { _id: userId } = req.user;
 
-    // Validate sessionId
     if (!sessionId || !Types.ObjectId.isValid(sessionId)) {
       return SendResponse(res, 400, false, "Invalid session ID");
     }
 
-    // Find and delete the session
     const deletedSession = await Session.findOneAndDelete({
       _id: sessionId,
-      userId, // Ensure user can only logout their own sessions
+      userId,
     });
 
     if (!deletedSession) {

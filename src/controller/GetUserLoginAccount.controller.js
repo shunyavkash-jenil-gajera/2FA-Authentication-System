@@ -12,7 +12,6 @@ export const GetUserLoginAccount = async (req, res) => {
       .select("_id ip deviceName os createdAt twoFaExpiry isTrustedDevice")
       .lean();
 
-    // Format sessions with better info
     const formattedSessions = sessions.map((session) => ({
       sessionId: session._id,
       ip: session.ip || "Unknown",
@@ -23,7 +22,13 @@ export const GetUserLoginAccount = async (req, res) => {
       isTrustedDevice: session.isTrustedDevice,
     }));
 
-    return SendResponse(res, 200, true, SUCCESS_MESSAGE.USER_LOGIN_ACCOUNTS, formattedSessions);
+    return SendResponse(
+      res,
+      200,
+      true,
+      SUCCESS_MESSAGE.USER_LOGIN_ACCOUNTS,
+      formattedSessions
+    );
   } catch (error) {
     return SendResponse(res, 500, false, error.message);
   }

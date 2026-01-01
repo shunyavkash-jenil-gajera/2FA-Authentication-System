@@ -18,21 +18,35 @@ export const checkSessionExpiry = async (req, res, next) => {
 
     const now = new Date();
 
-    // Check if device trust has expired (3 days)
-    if (session.deviceTrustExpiry && new Date(session.deviceTrustExpiry) < now) {
+    if (
+      session.deviceTrustExpiry &&
+      new Date(session.deviceTrustExpiry) < now
+    ) {
       await Session.findByIdAndDelete(session._id);
-      return SendResponse(res, 401, false, "Session expired. Please login again.");
+      return SendResponse(
+        res,
+        401,
+        false,
+        "Session expired. Please login again."
+      );
     }
 
-    // Check if 2FA has expired (15 days)
-    if (session.is2FaComplete && session.twoFaExpiry && new Date(session.twoFaExpiry) < now) {
+    if (
+      session.is2FaComplete &&
+      session.twoFaExpiry &&
+      new Date(session.twoFaExpiry) < now
+    ) {
       await Session.findByIdAndUpdate(session._id, {
         is2FaComplete: false,
       });
-      return SendResponse(res, 401, false, "2FA verification expired. Please verify again.");
+      return SendResponse(
+        res,
+        401,
+        false,
+        "2FA verification expired. Please verify again."
+      );
     }
 
-    // Update last active time
     await Session.findByIdAndUpdate(session._id, {
       lastActive: new Date(),
     });

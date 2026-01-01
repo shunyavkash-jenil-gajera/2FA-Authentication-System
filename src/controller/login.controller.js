@@ -20,12 +20,11 @@ export const logIn = async (req, res) => {
       return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_PASSWORD);
     }
 
-    // Check if user has a trusted device with this fingerprint
     const trustedDevice = await Session.findOne({
       userId: user._id,
       deviceFingerprint,
       isTrustedDevice: true,
-      twoFaExpiry: { $gt: new Date() }, // Only check 2FA expiry (15 days)
+      twoFaExpiry: { $gt: new Date() },
       is2FaComplete: true,
     });
 
@@ -38,7 +37,6 @@ export const logIn = async (req, res) => {
 
     const loggedInUser = await User.findById(user._id).select("-password");
 
-    // Calculate expiry time (15 days for 2FA)
     const twoFaExpiry = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
 
     const session = await Session.create({
@@ -49,7 +47,7 @@ export const logIn = async (req, res) => {
       os: req.os,
       deviceFingerprint: deviceFingerprint || null,
       isActive: true,
-      is2FaComplete: trustedDevice ? true : false, // Skip 2FA if trusted device
+      is2FaComplete: trustedDevice ? true : false,
       isTrustedDevice: trustedDevice ? true : false,
       twoFaExpiry,
     });

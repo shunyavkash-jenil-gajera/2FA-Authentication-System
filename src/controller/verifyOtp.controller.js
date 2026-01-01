@@ -32,8 +32,6 @@ export const verifyOtp = async (req, res) => {
     }
     user.enabled_2fa = true;
     await user.save();
-
-    // Calculate expiry time (15 days for 2FA)
     const twoFaExpiry = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
 
     const updatedSession = await Session.findOneAndUpdate(
