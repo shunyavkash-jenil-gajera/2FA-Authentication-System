@@ -4,12 +4,14 @@ import User from "../model/user.model.js";
 import { SendResponse } from "../utils/sendResponse.util.js";
 import { SUCCESS_MESSAGE } from "../utils/constants.util.js";
 
-export const generate2fa = async (req, res) => {
+export const enable2fa = async (req, res) => {
   try {
     const { _id, email } = req.user;
     const secretKey = speakeasy.generateSecret({ length: 25 });
 
-    const otpUrl = `otpauth://totp/${encodeURIComponent(email)}?secret=${secretKey.base32}`;
+    const otpUrl = `otpauth://totp/${encodeURIComponent(email)}?secret=${
+      secretKey.base32
+    }`;
 
     // Generate QR code URL
     const qrCodeDataURL = await QRCode.toDataURL(otpUrl);
