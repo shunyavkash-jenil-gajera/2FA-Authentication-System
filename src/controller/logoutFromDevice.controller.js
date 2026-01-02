@@ -9,7 +9,7 @@ export const logoutFromDevice = async (req, res) => {
     const { _id: userId } = req.user;
 
     if (!sessionId || !Types.ObjectId.isValid(sessionId)) {
-      return SendResponse(res, 400, false, "Invalid session ID");
+      return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_SESSION);
     }
 
     const deletedSession = await Session.findOneAndDelete({
@@ -18,10 +18,10 @@ export const logoutFromDevice = async (req, res) => {
     });
 
     if (!deletedSession) {
-      return SendResponse(res, 404, false, "Session not found");
+      return SendResponse(res, 404, false, ERROR_MESSAGE.SESSION_NOT_FOUND);
     }
 
-    return SendResponse(res, 200, true, "Device logged out successfully", {
+    return SendResponse(res, 200, true, SUCCESS_MESSAGE.DEVICE_LOGGED_OUT, {
       deviceName: deletedSession.deviceName,
       os: deletedSession.os,
     });

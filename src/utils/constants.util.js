@@ -11,6 +11,10 @@ export const ERROR_MESSAGE = {
   SESSION_NOT_FOUND: "Session Not Found Please login",
   MAIL_FORMED_TOKEN: "Malformed token",
   INVALID_TOKEN: "Unauthorized request: Invalid token payload",
+  NOT_ENABLED: "2FA is not enabled",
+  INVALID_SESSION: "Invalid session ID",
+  EXPIRED_2FA_VERIFICATION: "2FA verification expired. Please verify again.",
+  SESSION_EXPIRED: "Session expired. Please login again.",
 };
 
 export const SUCCESS_MESSAGE = {
@@ -22,4 +26,6 @@ export const SUCCESS_MESSAGE = {
   USER_LOGGED_OUT: "User Logged out Successfully",
   ALL_USER_LOGGED_OUT: "User Logged out from all devices successfully",
   ENABLED_2FA: "2FA enabled successfully",
+  DISABLED_2FA: "2FA disabled successfully",
+  DEVICE_LOGGED_OUT: "Device logged out successfully",
 };

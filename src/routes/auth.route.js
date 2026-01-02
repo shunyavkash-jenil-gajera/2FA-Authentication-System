@@ -22,6 +22,7 @@ import { registerSchema } from "../validation/registerSchema.validation.js";
 import { loginSchema } from "../validation/loginSchema.validation.js";
 import { LogOut, LogOutAll } from "../controller/logout.controller.js";
 import { disable2fa } from "../controller/disable2fa.controller.js";
+import { disable2faSchema } from "../validation/disable2fa.validation.js";
 
 const router = express.Router();
 
@@ -41,7 +42,13 @@ router.post(
 );
 
 router.post("/enable-2fa", checkSessionExpiry, authMiddleware, enable2fa);
-router.post("/disable-2fa", checkSessionExpiry, authMiddleware, disable2fa);
+router.post(
+  "/disable-2fa",
+  validationErrorHandler(disable2faSchema),
+  checkSessionExpiry,
+  authMiddleware,
+  disable2fa
+);
 
 router.post("/verifyOtp", checkSessionExpiry, authMiddleware, verifyOtp);
 

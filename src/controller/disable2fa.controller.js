@@ -8,30 +8,22 @@ export const disable2fa = async (req, res) => {
     const { _id } = req.user;
     const { password, otp } = req.body;
 
-    // Validate required fields
-    if (!password || !otp) {
-      return SendResponse(res, 400, false, "Password and OTP are required");
-    }
-
-    // Get user with password field
     const user = await User.findById(_id).select("+password +secrete2fa");
 
     if (!user) {
       return SendResponse(res, 404, false, ERROR_MESSAGE.USER_NOT_FOUND);
     }
 
-    // Verify password
     const isPasswordValid = await user.comparePassword(password);
+
     if (!isPasswordValid) {
-      return SendResponse(res, 400, false, "Invalid password");
+      return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_PASSWORD);
     }
 
-    // Verify 2FA is enabled
     if (!user.enabled_2fa || !user.secrete2fa) {
-      return SendResponse(res, 400, false, "2FA is not enabled");
+      return SendResponse(res, 400, false, ERROR_MESSAGE.NOT_ENABLED);
     }
 
-    // Verify OTP
     const isOTPValid = speakeasy.totp.verify({
       secret: user.secrete2fa,
       encoding: "base32",
@@ -43,13 +35,14 @@ export const disable2fa = async (req, res) => {
       return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_OTP);
     }
 
-    // Disable 2FA
     await User.findByIdAndUpdate(_id, {
       secrete2fa: "",
       enabled_2fa: false,
     });
 
-    return SendResponse(res, 200, true, "2FA disabled successfully", { enabled_2fa: false });
+    return SendResponse(res, 200, true, SUCCESS_MESSAGE.DISABLED_2FA, {
+      enabled_2fa: false,
+    });
   } catch (error) {
     console.log(error);
     return SendResponse(res, 500, false, error.message);

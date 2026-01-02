@@ -23,12 +23,7 @@ export const checkSessionExpiry = async (req, res, next) => {
       new Date(session.deviceTrustExpiry) < now
     ) {
       await Session.findByIdAndDelete(session._id);
-      return SendResponse(
-        res,
-        401,
-        false,
-        "Session expired. Please login again."
-      );
+      return SendResponse(res, 401, false, ERROR_MESSAGE.SESSION_EXPIRED);
     }
 
     if (
@@ -43,7 +38,7 @@ export const checkSessionExpiry = async (req, res, next) => {
         res,
         401,
         false,
-        "2FA verification expired. Please verify again."
+        ERROR_MESSAGE.EXPIRED_2FA_VERIFICATION
       );
     }
 

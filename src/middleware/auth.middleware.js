@@ -31,17 +31,24 @@ export const authMiddleware = async (req, res, next) => {
       return SendResponse(res, 400, false, ERROR_MESSAGE.INVALID_TOKEN);
     }
 
-    const user = await User.findById(decodedToken?.id).select("-password -secrete2fa");
+    const user = await User.findById(decodedToken?.id).select(
+      "-password -secrete2fa"
+    );
 
     if (!user) {
       console.error("User not found for token:", decodedToken);
-      return SendResponse(res, 401, false, "Unauthorized request: User not found");
+      return SendResponse(res, 401, false, ERROR_MESSAGE.USER_NOT_FOUND);
     }
 
     req.user = { ...user?._doc, accessToken: token };
     next();
   } catch (error) {
     console.error("JWT verification failed:", error.message);
-    return SendResponse(res, 401, false, error?.message || "Invalid access token");
+    return SendResponse(
+      res,
+      401,
+      false,
+      error?.message || "Invalid access token"
+    );
   }
 };
