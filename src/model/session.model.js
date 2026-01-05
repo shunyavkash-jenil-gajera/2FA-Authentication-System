@@ -45,9 +45,13 @@ const sessionSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  lastActive: {
+    type: Date,
+    default: Date.now,
+  },
   twoFaExpiry: {
     type: Date,
-    default: () => new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days
+    default: () => new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
   },
 });
 
