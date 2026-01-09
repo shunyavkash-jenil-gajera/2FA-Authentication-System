@@ -7,6 +7,7 @@ connectDB();
 
 app.listen(PORT, async () => {
   console.log(`server is listening on port ${PORT}`);
+  console.log("test");
 });
 
 export default app;
